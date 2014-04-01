@@ -1,6 +1,6 @@
 ## Propagandasenteret
 
-### Funksjon
+### Oversikt
 
 Propagandasenteret består av 
 - et grafisk brukergrensesnitt ("kontrollrommet" `propagandasenteret.hta`) som man kjører på sin egen maskin
