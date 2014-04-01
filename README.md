@@ -1,12 +1,14 @@
 ## Propagandasenteret
 
+Propagandasenteret er et enkelt og pragmatisk infoskjermsystem sydd sammen på [UiO : Realfagsbiblioteket](http://www.ub.uio.no/om/organisasjon/ureal/ureal/). Enkelt og pragmatisk først og fremst i den forstand av at det baserer seg på PowerPoint. Fordelen med det denne løsningen er at de fleste kan bruke PowerPoint, og at det har en stygg tendens til å være installert overalt. Nettsider kan også vises i PowerPoint om man skulle ønske det, se *Spørsmål og svar* nedenfor. Vi har kun testet systemet på Windows 7, og tar gjerne imot tilbakemeldinger om noen prøver det på andre Windows-versjoner.
+
 ### Oversikt
 
 Propagandasenteret består av 
 - et grafisk brukergrensesnitt ("kontrollrommet" `propagandasenteret.hta`) som man kjører på sin egen maskin
 - et klientscript (`infoskjerm_controller.vbs`) som kjører fra en *delt lokal mappe* (f.eks. `C:\SHOW`) på infoskjermmaskinene (klientene) og følger med på endringer i mappen. 
 
-Klientscriptet starter alltid den nyeste powerpoint-filen i mappen sin. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å låse powerpoint-filen, tar scriptet en kopi og starter kopien. Hvis scriptet ser at den aktive powerpointfilen har blitt endret, starter den endrede filen. Scriptet venter til filen er lukket, slik at man kan lagre underveis mens man jobber med en fil uten at endringene umiddelbart blir synlige.
+Klientscriptet overvåker den delte mappen og sørger for at det alltid er den nyeste PowerPoint-filen som vises. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å låse den aktive filen for redigering, tar scriptet en kopi og viser kopien. Man kan derfor jobbe med den aktive presentasjonen. Lagrer og lukker man den, blir versjonen som vises på infoskjermen oppdatert.
 
 Kontrollrommet og klientscriptene kommuniserer kun med hverandre ved hjelp av filer. Det er dermed ikke nødvendig å åpne noen nye porter, men vanlig fildeling må fungere. Fra kontrollrommet kan man også omstarte infoskjermscriptet (ved problemer) eller maskinen (ved alvorlige problemer). Kontrollrommet gir beskjed til klienten ved å opprette spesielle filer i den delte mappen.
 
@@ -43,7 +45,7 @@ Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger 
 
 *Hva hvis PowerPoint kræsjer?*
 
-PowerPoint *vil* kræsje en sjelden gang. Scriptet vil da automatisk starte programmet på nytt, *men* det er da viktig at ikke en dialogboks blokkerer systemet!
+En ulempe med PowerPoint er at programmet *vil* kræsje fra tid til annen. Klientscriptet tar høyde for dette, og starter da bare PowerPoint på nytt, men for at det skal fungere er det viktig at ikke en feilmeldingsboks blokkerer programmet fra å avslutte eller starte! 
  - For å skru av "Windows is checking for a solution…", se <http://tinyurl.com/btfc6fl>
  - For å skru av "auto recovery"; File > Powerpoint options > Save og fjern
    avkryssing for "Save autorecover information every ..."
