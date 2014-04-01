@@ -12,6 +12,8 @@ Kontrollrommet og klientscriptene kommuniserer kun med hverandre ved hjelp av fi
 
 ### Installasjon
 
+[Last ned en zip](https://github.com/scriptotek/propagandasenter/archive/master.zip) og pakk ut filene.
+
 #### På klientene (infoskjerm-maskinene)
 
 - Opprett mappen `C:\SHOW` og undermappene `C:\SHOW\script` og `C:\SHOW\arkiv`. 
@@ -31,7 +33,7 @@ Før man kan kjøre `propagandasenteret.hta` må man konfigurere hvilke klienter
       ["Bjørnehjørnet", "ubreal41"]
     ],
 
-Det er ingen begrensninger på hvor mange maskiner man kan med i listen.
+Det er ingen begrensninger på hvor mange maskiner man kan ha med i listen.
 
 ![Kontrollrommet](https://raw.github.com/scriptotek/propagandasenter/master/propagandasenteret.png)
 
