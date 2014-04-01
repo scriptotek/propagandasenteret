@@ -1,0 +1,515 @@
+<!--
+infoskjerm_status.hta rev. 8
+Dan Michael Heggø <d.m.heggo@ub.uio.no> (2014)
+-->
+<!doctype html>
+<head>
+  <title>Propagandasenteret</title>
+  <HTA:APPLICATION id="Propagandasenteret"
+    applicationName="Propagandasenteret"
+	caption="yes"
+    icon="icon.ico"
+    maximizeButton="yes"
+    minimizeButton="yes"
+    showInTaskbar="yes"
+    windowState="normal"
+    innerBorder="no"
+    navigable="yes"
+    scroll="auto"
+    scrollFlat="yes"
+    singleInstance="yes"
+    sysMenu="yes"
+    contextMenu="yes"
+    selection="yes" 
+    version="1.7" />
+  <meta http-equiv="x-ua-compatible" content="IE=9" />
+  <script src="jquery-1.10.1.min.js"></script>
+<style type="text/css">
+* {
+    margin: 0;
+}
+html, body {
+  padding: 0px;
+  height: 100%;
+}
+body {
+  font-family:sans-serif;
+  font-size: 12px;
+}
+
+/******* Hovedtabellen ******/
+table {
+  width: 100%;
+}
+th {
+  background-color: #555;
+  color: white;
+  text-align:left;
+}
+tr.even {
+  background-color: #ccdfef;
+}
+tr.odd {
+
+}
+tr.active-machine {
+  /*background-color: #FFFFAA;*/
+}
+td.first {
+  width:10px;
+}
+td.active-row {
+  background-color: #66CC66;
+}
+td {
+  border-bottom:1px solid #777;
+}
+
+/******* Andre ting under tabellen  ******/
+.urlfield {
+ padding: 10px;
+}
+.urlfield input {
+ width:400px;
+}
+div#avansert {
+	float: right;
+	padding: 3px 10px;
+	margin: 3px;
+}
+div#mainsection {
+    position: absolute;
+	bottom: 20px;
+	top: 0;
+	left: 0;
+	right: 0;
+	overflow: auto;
+}
+div#footer {
+    position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+    height: 20px;
+	background: #555;
+	color: #DDD;
+	font-size:14px;
+	font-weight: bold;
+	font-family: Gulim, sans-serif;
+}
+#footer a:link, #footer a:visited {
+    color: #aaddaa;
+}
+div#clock {
+   text-align:right;
+   padding:3px 10px;
+   float:right;
+}
+div#clock2 {
+   padding:3px 3px;
+}
+
+
+/******* Loggfarger ******/
+div#log {
+  margin-top: 20px;
+}
+div#log-header {
+  font-weight: bold;
+}
+div#log-body {
+ font-family: monospace; 
+}
+span.timestamp {
+  color: #666699;
+}
+span.newshow {
+  font-weight: bold;
+  background-color: #FFFF99;
+}
+span.killscript {
+  font-weight: bold;
+  background-color: #FF8888;
+}
+span.startscript {
+  font-weight: bold;
+  background-color: #88FF88;
+}
+</style>
+</head>
+<body>
+
+<div id="mainsection">
+	<table cellpadding=5 border=0 cellspacing=0>
+	  <thead>
+		<tr>
+		  <th>&nbsp;</th>
+		  <th>Skjerm:</th>
+		  <th>Nå vises:</th>
+		  <th>Sist endret:</th>
+		  <th width=40>Logg</th>
+		  <th width=80>Script</th>
+		  <th width=80>Maskin</th>
+		</tr>
+	  </thead>
+	  <tbody>
+	  </tbody>
+	</table>
+	<div id="avansert">
+		<input type="checkbox" id="vis-avansert" />
+		<label for="vis-avansert">Vis avansert funksjonalitet</label>
+	</div>
+	<div id="log">
+	</div>
+</div>
+<div id="footer">
+	<div id="clock"></div>
+	<div id="clock2"></div>
+</div>
+
+<script language="JavaScript">
+
+window.resizeTo(1100,450)
+var forReading = 1,
+	forWriting = 2,
+	currentMachine = 0,
+	interval,
+    machines = [
+      ["Foajé inngang", "ubreal59"],
+      ["Foajé øst", "ubreal42"],
+      ["Skranken", "ubreal36"],
+      ["2. messanin", "ubreal54"],
+      ["Bjørnehjørnet", "ubreal41"]
+      //["TVPC", "ubreal28"]
+	  //["DM", "ubreal22"]
+      //["Scene-PC", "ubreal23"],
+	  //["Kurs-demo", "ubrealkurs01"]
+    ],
+	sleepEnabled = true,
+	countdownEnabled = true,
+	openSec = 0,
+	closeSec = 0,
+	aapningsTiderActive = true,
+	openingTime = ['0','0'],
+	closingTime = ['23','0'];
+
+function escapeHtml(unsafe) {
+  return unsafe
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#039;");
+}
+
+function set_activemachine(event) {
+	var tr = $(event.target).closest('tr'),
+		id = tr.attr('id').split('_')[1];
+	event.preventDefault();
+	$('tr').removeClass('active-machine');
+	tr.addClass('active-machine');
+	maskinstatus(id);
+}
+
+function open_show(event) {
+	var id = $(event.target).closest('tr').attr('id').split('_')[1],
+		shell = new ActiveXObject("Shell.Application"),
+	    path = '"\\\\' + machines[id][1] + '\\SHOW\\' + $(event.target).text() + '"';
+	if (!$(event.target).hasClass('showlink')) return;
+	event.preventDefault();
+	try {
+		shell.ShellExecute("powerpnt.exe", path);
+	} catch (e) {
+		alert("Klarte ikke å åpne filen.");
+	}
+}
+
+function open_folder(event) {
+	var id = $(event.target).closest('tr').attr('id').split('_')[1],
+		shell = new ActiveXObject("Shell.Application"),
+	    path = '\\\\' + machines[id][1] + '\\SHOW';
+	event.preventDefault();
+	try {
+		shell.Open(path);
+	} catch (e) {
+		alert("Klarte ikke å åpne mappen.");
+	}
+}
+
+function restart_script(event) {
+	var id = $(event.target).closest('tr').attr('id').split('_')[1],
+		fso = new ActiveXObject("Scripting.FileSystemObject"),
+	    path = '\\\\' + machines[id][1] + '\\SHOW\\script\\killscript',
+		file;
+	event.preventDefault();
+	$('tbody > tr:eq('+id+') > td:eq(2)').html('Venter på at scriptet skal omstarte...');
+	$('tbody > tr:eq('+id+') > td:eq(3)').html('-');
+	try {
+		file = fso.CreateTextFile(path)
+		file.Close();
+	} catch (e) {
+		alert("Klarte ikke å restarte scriptet.");
+	}
+}
+
+function restart_machine(event) {
+	var id = $(event.target).closest('tr').attr('id').split('_')[1],
+		fso = new ActiveXObject("Scripting.FileSystemObject"),
+	    path = '\\\\' + machines[id][1] + '\\SHOW\\script\\restartmaskin.txt',
+		file;
+	event.preventDefault();
+	if (confirm("Trykk Ok for å starte maskinen på nytt. Etter at maskinen har startet på nytt, kan du oppleve at dette scriptet \"henger\" noen sekunder mens det prøver å få kontakt med maskinen igjen.") === true) {
+		try {
+			file = fso.OpenTextFile(path, forWriting);
+			file.Write('1');
+			file.Close();
+			$('tbody > tr:eq('+id+') > td:eq(2)').html('Maskinen avslutter...');
+			$('tbody > tr:eq('+id+') > td:eq(3)').html('-');
+		} catch (e) {
+			alert("Klarte ikke å restarte maskinen.");
+		}
+	}
+}
+
+function save_specialpage(event) {
+	var fso = new ActiveXObject("Scripting.FileSystemObject"),
+		path = '\\\\platon\\ub-felles\\scriptotek\\propagandasenter\\ureal\\specialpage.txt',
+		file;
+	event.preventDefault();
+	try {
+		file = fso.CreateTextFile(path)
+		file.WriteLine($('#specialpage input').val());
+		file.Close();
+	} catch (e) {
+		alert("Klarte ikke å lagre " + path);
+	}
+}
+
+function read_specialpage() {
+	var fso = new ActiveXObject("Scripting.FileSystemObject"),
+		path = '\\\\platon\\ub-felles\\scriptotek\\propagandasenter\\ureal\\specialpage.txt',
+		file;
+	try {
+		file = fso.GetFile(path).OpenAsTextStream(forReading, 0);
+		var line = file.ReadLine();
+		$('#specialpage input').val(line);
+		file.Close();
+	} catch (e) {
+		$('#log').html('Det oppsto en feil: ' + e.message);
+		return;
+	}
+	
+}
+
+function ping(host) {
+	var strComputer = '.';
+	var SWBemlocator = new ActiveXObject("WbemScripting.SWbemLocator");
+	var wmi = SWBemlocator.ConnectServer(strComputer, "/root/CIMV2");
+	//var wmi = GetObject("Winmgmts:");
+	var eStatus = new Enumerator(wmi.ExecQuery(
+"Select StatusCode from Win32_PingStatus Where Address='" + host + "'"));
+	return (eStatus.item().StatusCode === 0);
+}
+
+function maskinstatus(no) {
+	var fso = new ActiveXObject("Scripting.FileSystemObject"),
+	    path = '\\\\' + machines[no][1] + '\\SHOW\\script\\log.txt',
+		file,
+		lines = new Array(),
+		line = "",
+		html = "<div id='log-header'>" 
+		  + "Logg for " + machines[no][0] + " (" + machines[no][1] + "):"
+		  + "</div>"
+		  + "<div id='log-body'>";
+
+		try {
+			file = fso.GetFile(path).OpenAsTextStream(forReading, 0);
+			while (!file.AtEndOfStream){
+				lines.push(file.ReadLine());
+			}
+			file.Close();
+		} catch (e) {
+			$('#log').html('Det oppsto en feil: ' + e.message);
+			return;
+		}
+	
+		lines.reverse();
+	
+		for (var i = 0; i < 14; i++) {
+			line = escapeHtml(lines[i]) 
+				.replace(/\[([^\]]+)\]/, "<span class='timestamp'>$1 - </span>")
+				.replace(/(Starter &lt;.*)$/, "<span class='newshow'>$1</span>")
+				.replace(/(Starter p.*)$/, "<span class='startscript'>$1</span>")
+				.replace(/(Fant &lt;killscript.*)$/, "<span class='killscript'>$1</span>");
+			html += line + "<br />\n";
+		}
+		html += "<div>";
+	
+		$('#log').html(html);
+
+}
+
+function toggle_advanced() {
+	if ($('#vis-avansert').is(':checked')) {
+		$.each(Array(1,5,6,7,8), function(i,k) {
+			$('tr > td:nth-child('+k+'), tr > th:nth-child('+k+')').show();
+		});
+	} else {
+		$.each(Array(1,5,6,7,8), function(i,k) {
+			$('tr > td:nth-child('+k+'), tr > th:nth-child('+k+')').hide();
+		});
+	}	
+}
+
+function init() {
+	
+	for (var i = 0; i < machines.length; i++) {
+		$('table > tbody').append('<tr id="machine_' + i + '">' 
+			+ '<td class="first">&nbsp;</td>'
+			+ '<td><a class="loglink" href="#">' + machines[i][0] + ' (' + machines[i][1] + ')</a></td>' 
+			+ '<td> - </td><td> - </td>'
+			+ '<td><input type="button" class="folderlink" value=" Vis " /></td>'
+			+ '<td><input type="button" class="restartlink" value="Omstart" /></td>'
+			+ '<td><input type="button" class="restartmachinelink" value="Omstart" /></td>'
+			+ '</tr>');
+	}
+	$('tr:even').addClass('even');
+	$('tr:odd').addClass('odd');
+	$('a.loglink').click(open_folder);
+	$('input.folderlink').click(set_activemachine);
+	$('input.restartlink').click(restart_script);
+	$('input.restartmachinelink').click(restart_machine);
+	$('#vis-avansert').click(toggle_advanced);
+	toggle_advanced();
+	read_specialpage();
+}
+
+function frmt(n, enhet, flertallsendelse) {
+	if (n == 1) {
+		return n + ' ' + enhet;
+	} else {
+		return n + ' ' + enhet + flertallsendelse;
+	}
+}
+
+function tosiffer(n) {
+	if (n < 10) {
+		return '0' + n;
+	} else {
+		return n;
+	}
+}
+
+function update() {
+	var file;
+	var path = ""
+	var fso = new ActiveXObject("Scripting.FileSystemObject");
+	var dots = "",
+		statustxt = '',
+		i = currentMachine,
+		statuscell = $('tbody > tr:eq(' + i + ') > td:eq(2)');
+	//clearInterval(interval);
+	//$('div#status').fadeToggle(200);
+	
+	if (statuscell.text() == "Maskinen avslutter...") {
+		if (ping(machines[i][1]) === false) {
+			statuscell.html("Maskinen starter igjen...");
+		}		
+	} else if (statuscell.text() == "Maskinen starter igjen...") {
+		if (ping(machines[i][1]) === true) {
+			statuscell.html("Et øyeblikk...");
+		}
+
+	} else {
+
+		if (ping(machines[i][1]) === false) {
+			statuscell.html("Ingen kontakt med maskinen");
+		} else {
+			path = "\\\\" + machines[i][1] + "\\SHOW\\script\\Nå vises.txt";
+			var datestring = '?';
+			var gotStatus = false;
+			try {
+				file = fso.GetFile(path).OpenAsTextStream(forReading, 0);
+				var lines = [];
+				while (!file.AtEndOfStream){
+					lines.push(file.ReadLine());
+				}
+				file.Close();
+				statustxt = '<a href="#" class="showlink">' + lines[0] + '</a>';
+				if (lines.length > 2) {
+					statustxt += ' (slide ' + lines[2] + ')';
+				}
+				gotStatus = true;
+
+				var ds = lines[1].split(' '),
+					dd = ds[0].split('.'),
+					dt = ds[1].split(':'),
+					d1 = new Date(dd[2], dd[1]-1, dd[0], dt[0], dt[1], dt[2], 0),
+					d2 = new Date(),
+					ddiff = d2.getTime() - d1.getTime();
+				ddiff = ddiff / 1000;
+				
+				var days = Math.floor(ddiff/86400);
+				ddiff -= days*86400;
+				var hours = Math.floor(ddiff/3600);
+				ddiff -= hours*3600;
+				var mins = Math.floor(ddiff/60);
+				ddiff -= mins*60;
+				var datestring = '';
+				if (days > 0) datestring = (days == 1 ? 'i går' : 'for ' + days + ' dager siden')
+				else if (hours > 0) datestring = 'for ' + (hours == 1 ? 'én time' : (hours + ' timer')) + ' siden';
+				else if (mins > 0) datestring = 'for ' + (mins == 1 ? 'ett minutt' : (mins + ' minutter')) + ' siden';
+				else datestring = 'for under ett minutt siden';
+
+			} catch (e) {
+				statustxt = 'Kunne ikke lese status fra ' + machines[i][1];
+				line2 = e.message;			
+			}
+			
+			
+			if (!gotStatus) {
+				try {
+					file = fso.GetFile(path).OpenAsTextStream(forReading, 0);
+					statustxt = file.ReadLine();
+				} catch (e) {
+					statustxt = 'Kunne ikke lese status';
+				}
+			}
+			
+			if ($('tbody > tr:eq('+i+') > td:eq(2)').html() == 'Venter på at scriptet skal omstarte...' && datestring != '?') {
+				// pass
+			} else {				
+				$('tbody > tr:eq('+i+') > td:eq(2)').html(statustxt);
+				$('tbody > tr:eq('+i+') > td:eq(3)').html(datestring);
+			}
+			$('a.showlink').unbind();
+			$('a.showlink').on('click', open_show);
+		
+			if ($('tr.active-machine').length === 1) {
+				var id = $('tr.active-machine').attr('id').split('_')[1];
+				maskinstatus(id);
+			}			
+		}
+
+	}
+	
+	currentMachine = currentMachine + 1;
+	if (currentMachine == machines.length) {
+		currentMachine = 0;
+	}
+	$('tr > td:nth-child(1)').removeClass('active-row');
+	$('tbody > tr:eq('+currentMachine+') > td:eq(0)').addClass('active-row');
+
+	window.setTimeout("update()",300);
+}
+	
+$(document).ready(function() {
+    init();
+    //interval = window.setInterval("update()",200);
+	window.setTimeout("update()",1000);
+});
+
+</script>
+
+</body>
+</html>
