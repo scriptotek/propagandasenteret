@@ -6,7 +6,7 @@ Propagandasenteret består av
 - et grafisk brukergrensesnitt ("kontrollrommet" `propagandasenteret.hta`) som man kjører på sin egen maskin
 - et klientscript (`infoskjerm_controller.vbs`) som kjører fra en *delt lokal mappe* (f.eks. `C:\SHOW`) på infoskjermmaskinene (klientene) og følger med på endringer i mappen. 
 
-Klientscriptet starter alltid den nyeste powerpoint-filen i mappen sin. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å løse powerpoint-filen tar scriptet en kopi og starter kopien. Hvis scriptet ser at den aktive powerpointfilen har blitt endret, starter den endrede filen. Scriptet venter til filen er lukket, slik at man kan lagre underveis mens man jobber med en fil uten at endringene umiddelbart blir synlige.
+Klientscriptet starter alltid den nyeste powerpoint-filen i mappen sin. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å låse powerpoint-filen, tar scriptet en kopi og starter kopien. Hvis scriptet ser at den aktive powerpointfilen har blitt endret, starter den endrede filen. Scriptet venter til filen er lukket, slik at man kan lagre underveis mens man jobber med en fil uten at endringene umiddelbart blir synlige.
 
 Kontrollrommet og klientscriptene kommuniserer kun med hverandre ved hjelp av filer. Det er dermed ikke nødvendig å åpne noen nye porter, men vanlig fildeling må fungere. Fra kontrollrommet kan man også omstarte infoskjermscriptet (ved problemer) eller maskinen (ved alvorlige problemer). Kontrollrommet gir beskjed til klienten ved å opprette spesielle filer i den delte mappen.
 
@@ -46,7 +46,14 @@ PowerPoint *vil* kræsje en sjelden gang. Scriptet vil da automatisk starte prog
  - For å skru av "auto recovery"; File > Powerpoint options > Save og fjern
    avkryssing for "Save autorecover information every ..."
 
-*Låser scriptet den aktive powerpoint-filen?*
+*Låser scriptet den aktive PowerPoint-filen?*
 
 Nei, scriptet lagrer en midlertidig kopi, som den kjører istedet for originalfilen. Denne legges i scriptFolder, skjules, og startes i readonly-modus (hvorfor ikke?)
 
+*Kan jeg vise nettsider i PowerPoint?*
+
+Ja, ved hjelp av [LiveWeb](http://skp.mvps.org/liveweb.htm). Merk at denne vil bruke en gammel versjon av IE med mindre nettsiden man viser indikerer støtte for nyere versjoner, f.eks. ved hjelp av `<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >`
+
+*Kan scriptet vise en bestemt nettside (f.eks. en nedtelling) på alle skjermer like før stengetid?*
+
+Ja, men det krever at man setter opp nettsiden selv. I `infoskjerm_controller.vbs` kan man skru på `aapningstiderEnabled`, angi åpningstider i `aapningstider`-lista (standard er 8-22 alle dager), og angi URLer til nettside som skal vises rett før stenging og etter stenging på hhv. linje 567 og 556.
