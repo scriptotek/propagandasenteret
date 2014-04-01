@@ -19,5 +19,17 @@ Kontrollrommet og klientscriptene kommuniserer kun med hverandre ved hjelp av fi
 
 ### Kontrollrommet
 
-For å starte 'kontrollrommet' åpner man `propagandasenteret.hta`. Programmet kjøres uten noen installasjon.  Det følger imidlertid også med et script, `start_propagandasenteret.bat`, som man kan bruke hvis man vil kjøre programmet fra en nettverksdisk. `start_propagandasenteret.bat` starter Propagandasenteret fra en lokal mappe, `%APPDATA%\Scriptotek\Propagandasenteret`, og tar seg av å kopiere filene dit hvis de ikke allerede finnes. Det tar seg også av å oppdatere filene hvis versjonen på nettverksdisken har blitt oppdatert. Dette er praktisk hvis mange skal bruke programmet. Hvis en ny person hos oss vil bruke Propagandasenteret, lager vi derfor en snarvei fra `start_propagandasenteret.bat` på nettverskdisken vår til personens skriverbord. Vi legger også gjerne på ikonet fra `Broadcast.ico`. 
+Før man kan kjøre `propagandasenteret.hta` må man konfigurere hvilke klienter den skal sjekke. Dette gjøres ved å åpne filen i en teksteditor, f.eks. Notepad, og redigere listen over klienter som starter på linje 177. Her er listen slik den er satt opp for våre fem maskiner:
+
+    machines = [
+      ["Foajé inngang", "ubreal59"],
+      ["Foajé øst", "ubreal42"],
+      ["Skranken", "ubreal36"],
+      ["2. messanin", "ubreal54"],
+      ["Bjørnehjørnet", "ubreal41"]
+    ],
+
+Det er ingen begrensninger på hvor mange maskiner man kan med i listen.
+
+Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger imidlertid også med et script, `start_propagandasenteret.bat`, som man kan bruke hvis man vil kjøre programmet fra en nettverksdisk. `start_propagandasenteret.bat` starter Propagandasenteret fra en lokal mappe, `%APPDATA%\Scriptotek\Propagandasenteret`, og tar seg av å kopiere filene dit hvis de ikke allerede finnes. Det tar seg også av å oppdatere filene hvis versjonen på nettverksdisken har blitt oppdatert. Dette er praktisk hvis mange skal bruke programmet. Hvis en ny person hos oss vil bruke Propagandasenteret, lager vi derfor en snarvei fra `start_propagandasenteret.bat` på nettverskdisken vår til personens skriverbord. Vi legger også gjerne på ikonet fra `Broadcast.ico`. 
 
