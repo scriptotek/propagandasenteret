@@ -46,7 +46,7 @@ Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger 
 *Hva hvis PowerPoint kræsjer?*
 
 En ulempe med PowerPoint er at programmet *vil* kræsje fra tid til annen. Klientscriptet tar høyde for dette, og starter da bare PowerPoint på nytt, men for at det skal fungere er det viktig at ikke en feilmeldingsboks blokkerer programmet fra å avslutte eller starte! 
- - For å skru av "Windows is checking for a solution…", se <http://tinyurl.com/btfc6fl>
+ - For å skru av "Windows is checking for a solution…", se [denne siden](http://www.techspot.com/blog/671/disable-windows-is-checking-for-a-solution-message-after-a-program-crashes/)
  - For å skru av "auto recovery"; File > Powerpoint options > Save og fjern
    avkryssing for "Save autorecover information every ..."
 
@@ -56,7 +56,7 @@ Nei, scriptet lagrer en midlertidig kopi, som den kjører istedet for originalfi
 
 *Kan jeg vise nettsider i PowerPoint?*
 
-Ja, ved hjelp av [LiveWeb](http://skp.mvps.org/liveweb.htm). Merk at denne vil bruke en gammel versjon av IE med mindre nettsiden man viser indikerer støtte for nyere versjoner, f.eks. ved hjelp av `<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >`
+Ja, ved hjelp av [LiveWeb](http://skp.mvps.org/liveweb.htm). På infoskjermmaskinene kan man legge til `C:\SHOW` under [Trusted Locations](https://office.microsoft.com/en-us/word-help/create-remove-or-change-a-trusted-location-for-your-files-HA010031999.aspx#BM13). Merk også at LiveWeb vil bruke en gammel versjon av IE med mindre nettsiden man viser indikerer støtte for nyere versjoner, f.eks. ved hjelp av `<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >`
 
 *Kan scriptet vise en bestemt nettside (f.eks. en nedtelling) på alle skjermer like før stengetid?*
 
