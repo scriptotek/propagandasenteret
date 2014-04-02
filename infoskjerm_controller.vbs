@@ -40,8 +40,10 @@ Const ForWriting = 2
 Dim baseFolder, scriptFolder, archiveFolder, logFile, pptPattern, pptPattern2
 
 
-Dim aapningstiderEnabled = False
+Dim aapningstiderEnabled : aapningstiderEnabled = False
+
 Dim aapningstider(6,3)
+Dim i
 For i = 0 to 6   ' alle dager
 	aapningstider(i, 0) = 8    ' Åpner klokka 08
 	aapningstider(i, 1) = 0    ' (minutter, men disse ignoreres)
@@ -75,23 +77,17 @@ End Sub
 
 Sub Welcome
 	' Skriver ut velkomstmelding når scriptet starter
-	WScript.Echo(" ")
-	WScript.Echo("__      __  _ _                                        ")
-	Wait(0.1)
-	WScript.Echo("\ \    / / | | |                                       ")
-	Wait(0.1)
-	WScript.Echo(" \ \  / /__| | | _____  _ __ ___  _ __ ___   ___ _ __  ")
-	Wait(0.1)
-	WScript.Echo("  \ \/ / _ \ | |/ / _ \| '_ ` _ \| '_ ` _ \ / _ \ '_ \ ")
-	Wait(0.1)
-	WScript.Echo("   \  /  __/ |   < (_) | | | | | | | | | | |  __/ | | |")
-	Wait(0.1)
-	WScript.Echo("    \/ \___|_|_|\_\___/|_| |_| |_|_| |_| |_|\___|_| |_|")
-	Wait(0.1)
-	WScript.Echo(" ")
+    WScript.Echo(" _____                               _                 _               _   ")
+    Wait(0.1)
+    WScript.Echo("|  _  |___ ___ ___ ___ ___ ___ ___ _| |___ ___ ___ ___| |_ ___ ___ ___| |_ ")
+    Wait(0.1)
+    WScript.Echo("|   __|  _| . | . | .'| . | .'|   | . | .'|_ -| -_|   |  _| -_|  _| -_|  _|")
+    Wait(0.1)
+    WScript.Echo("|__|  |_| |___|  _|__,|_  |__,|_|_|___|__,|___|___|_|_|_| |___|_| |___|_|  ")
+    Wait(0.1)
+    WScript.Echo("              |_|     |___|                                                ")
 	Wait(0.4)
    	LogMsg("-[ Starter ]------------------------------------------------------------------------------------")
-
 
 	Dim fso : Set fso = CreateObject("Scripting.FileSystemObject")	
 	If fso.FileExists(baseFolder & scriptFolder & "specialpage") = True Then
