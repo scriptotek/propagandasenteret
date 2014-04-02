@@ -1,16 +1,20 @@
 ## Propagandasenteret
 
-Propagandasenteret er et enkelt og pragmatisk infoskjermsystem sydd sammen på [UiO : Realfagsbiblioteket](http://www.ub.uio.no/om/organisasjon/ureal/ureal/). Enkelt og pragmatisk først og fremst i den forstand av at det baserer seg på PowerPoint. Fordelen med det denne løsningen er at de fleste kan bruke PowerPoint, og at det har en stygg tendens til å være installert overalt. Nettsider kan også vises i PowerPoint om man skulle ønske det, se *Spørsmål og svar* nedenfor. Vi har kun testet systemet på Windows 7, og tar gjerne imot tilbakemeldinger om noen prøver det på andre Windows-versjoner.
+Propagandasenteret er et enkelt og pragmatisk infoskjermsystem sydd sammen på [UiO : Realfagsbiblioteket](http://www.ub.uio.no/om/organisasjon/ureal/ureal/). Enkelt og pragmatisk først og fremst i den forstand av at det baserer seg på PowerPoint. En fordel med dette er at de fleste kan bruke PowerPoint i større eller mindre grad, og programmet har en tendens til å være installert overalt. Nettsider kan også vises i PowerPoint om man skulle ønske det, se *Spørsmål og svar* nedenfor. Vi har kun testet systemet på Windows 7, og tar gjerne imot tilbakemeldinger om noen prøver det på andre Windows-versjoner.
 
 ### Oversikt
 
 Propagandasenteret består av 
-- et grafisk brukergrensesnitt ("kontrollrommet" `propagandasenteret.hta`) som man kjører på sin egen maskin
-- et klientscript (`infoskjerm_controller.vbs`) som kjører fra en *delt lokal mappe* (f.eks. `C:\SHOW`) på infoskjermmaskinene (klientene) og følger med på endringer i mappen. 
+- et grafisk brukergrensesnitt ("kontrollrommet" `propagandasenteret.hta`) som man kjører fra sin egen maskin
+- et klientscript (`infoskjerm_controller.vbs`) som kjører fra en *delt lokal mappe* (f.eks. `C:\SHOW`) på infoskjermmaskinene (klientene). Scriptet kjører i bakgrunnen og følger med på endringer i mappen.
 
-Klientscriptet overvåker den delte mappen og sørger for at det alltid er den nyeste PowerPoint-filen som vises. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å låse den aktive filen for redigering, tar scriptet en kopi og viser kopien. Man kan derfor jobbe med den aktive presentasjonen. Lagrer og lukker man den, blir versjonen som vises på infoskjermen oppdatert.
+**Kontrollrommet** gir oversikt over hva som vises på de ulike klientene, og lenker til å åpne de delte mappene og de aktive presentasjonene. I tillegg kan man omstarte klientscriptet eller maskinen ved problemer. Kontrollrommet og klientscriptene kommuniserer med hverandre kun ved hjelp av filer i de delte mappene. Det er dermed ikke nødvendig å åpne noen nye porter, men vanlig fildeling må fungere.
 
-Kontrollrommet og klientscriptene kommuniserer kun med hverandre ved hjelp av filer. Det er dermed ikke nødvendig å åpne noen nye porter, men vanlig fildeling må fungere. Fra kontrollrommet kan man også omstarte infoskjermscriptet (ved problemer) eller maskinen (ved alvorlige problemer). Kontrollrommet gir beskjed til klienten ved å opprette spesielle filer i den delte mappen.
+![Kontrollrommet](https://raw.github.com/scriptotek/propagandasenter/master/propagandasenteret.png)
+
+**Klientscriptet** overvåker den delte mappen og sørger for at det alltid er den nyeste PowerPoint-filen som vises. Eldre filer flyttes automatisk til en arkiv-mappe. For å unngå å låse den aktive filen for redigering, tar scriptet en kopi og viser kopien. Man kan derfor jobbe med den aktive presentasjonen. Lagrer og lukker man den, blir versjonen som vises på infoskjermen oppdatert.
+
+![Klientscriptet](https://raw.github.com/scriptotek/propagandasenter/master/klientscript.png)
 
 ### Installasjon
 
@@ -36,8 +40,6 @@ Før man kan kjøre `propagandasenteret.hta` må man konfigurere hvilke klienter
     ],
 
 Det er ingen begrensninger på hvor mange maskiner man kan ha med i listen.
-
-![Kontrollrommet](https://raw.github.com/scriptotek/propagandasenter/master/propagandasenteret.png)
 
 Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger imidlertid også med et script, `start_propagandasenteret.bat`, som man kan bruke hvis man vil kjøre programmet fra en nettverksdisk. `start_propagandasenteret.bat` starter Propagandasenteret fra en lokal mappe, `%APPDATA%\Scriptotek\Propagandasenteret`, og tar seg av å kopiere filene dit hvis de ikke allerede finnes. Det tar seg også av å oppdatere filene hvis versjonen på nettverksdisken har blitt oppdatert. Dette er praktisk hvis mange skal bruke programmet. Hvis en ny person hos oss vil bruke Propagandasenteret, lager vi derfor en snarvei fra `start_propagandasenteret.bat` på nettverskdisken vår til personens skriverbord. Vi legger også gjerne på ikonet fra `Broadcast.ico`. 
 
