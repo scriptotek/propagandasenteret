@@ -22,10 +22,12 @@ Propagandasenteret består av
 
 #### På klientene (infoskjerm-maskinene)
 
-- Opprett mappen `C:\SHOW` og undermappene `C:\SHOW\script` og `C:\SHOW\arkiv`. 
-- Kopier `infoskjerm_controller.vbs` til `C:\SHOW\script`
-- Del mappen `C:\SHOW` med alle som skal bruke Propagandasenteret (standard mappedeling i Windows)
-- Kopier filene i mappen `oppstartsscript` til en oppstartsmappe (`C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup` på vår versjon av Windows). Det ene av disse scriptene tar seg av å holde `infoskjerm_controller.vbs`-scriptet i live og eventuelt omstarte. Det andre tar seg av å omstarte maskinen hvis man ber om det fra kontrollrommet.
+1. Opprett mappen `C:\SHOW` og undermappene `C:\SHOW\script` og `C:\SHOW\arkiv`. 
+2. Kopier `infoskjerm_controller.vbs` til `C:\SHOW\script`
+3. Del mappen `C:\SHOW` med alle som skal bruke Propagandasenteret (standard mappedeling i Windows)
+4. Kopier filene i mappen `oppstartsscript` til en oppstartsmappe (`C:\ProgramData\Microsoft\Windows\Start Menu\Programs\Startup` på vår versjon av Windows). Det ene av disse scriptene tar seg av å holde `infoskjerm_controller.vbs`-scriptet i live og eventuelt omstarte. Det andre tar seg av å omstarte maskinen hvis man ber om det fra kontrollrommet.
+5. Skru på autopålogging. Hvordan dette gjøres kan variere litt fra system til system, men her er [én oppskrift](https://superuser.com/questions/28647/how-do-i-enable-automatic-logon-in-windows-7-when-im-on-a-domain)
+6. Omstart maskinen og sjekk at scriptene starter
 
 #### Kontrollrommet
 
@@ -39,6 +41,7 @@ Før man kan kjøre `propagandasenteret.hta` må man konfigurere hvilke klienter
       ["Bjørnehjørnet", "ubreal41"]
     ],
 
+Det første elementet er et visningsnavn, mens det andre elementet er [maskinens navn](http://windows.microsoft.com/en-us/windows/find-computer-name), med eller uten domene.
 Det er ingen begrensninger på hvor mange maskiner man kan ha med i listen.
 
 Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger imidlertid også med et script, `start_propagandasenteret.bat`, som man kan bruke hvis man vil kjøre programmet fra en nettverksdisk. `start_propagandasenteret.bat` starter Propagandasenteret fra en lokal mappe, `%APPDATA%\Scriptotek\Propagandasenteret`, og tar seg av å kopiere filene dit hvis de ikke allerede finnes. Det tar seg også av å oppdatere filene hvis versjonen på nettverksdisken har blitt oppdatert. Dette er praktisk hvis mange skal bruke programmet. Hvis en ny person hos oss vil bruke Propagandasenteret, lager vi derfor en snarvei fra `start_propagandasenteret.bat` på nettverskdisken vår til personens skriverbord. Vi legger også gjerne på ikonet fra `Broadcast.ico`. 
