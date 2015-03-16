@@ -51,7 +51,7 @@ Etter man har lagret kan `propagandasenteret.hta` kjøres direkte.  Det følger 
 *Hva hvis PowerPoint kræsjer?*
 
 En ulempe med PowerPoint er at programmet *vil* kræsje fra tid til annen. Klientscriptet tar høyde for dette, og starter da bare PowerPoint på nytt, men for at det skal fungere er det viktig at ikke en feilmeldingsboks blokkerer programmet fra å avslutte eller starte! 
- - For å skru av "Windows is checking for a solution…", se [denne siden](http://www.techspot.com/blog/671/disable-windows-is-checking-for-a-solution-message-after-a-program-crashes/)
+ - For å skru av "Windows is checking for a solution…", se [denne siden](http://www.techspot.com/community/topics/disable-windows-is-checking-for-a-solution-to-the-problem-prompt-after-a-program-hangs-up.193376/)
  - For å skru av "auto recovery"; File > Powerpoint options > Save og fjern
    avkryssing for "Save autorecover information every ..."
 
