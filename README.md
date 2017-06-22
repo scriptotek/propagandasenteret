@@ -66,3 +66,11 @@ Ja, ved hjelp av [LiveWeb](http://skp.mvps.org/liveweb.htm). På infoskjermmaski
 *Kan scriptet vise en bestemt nettside (f.eks. en nedtelling) på alle skjermer like før stengetid?*
 
 Ja, men det krever at man setter opp nettsiden selv. I `infoskjerm_controller.vbs` kan man skru på `aapningstiderEnabled`, angi åpningstider i `aapningstider`-lista (standard er 8-22 alle dager), og angi URLer til nettside som skal vises rett før stenging og etter stenging på hhv. linje 567 og 556.
+
+*Må scriptene kjøres som administrator?*
+
+Nei.
+
+*Jeg får meldingen "The publisher could not be verified. Are you sure you want to run this software?"*
+
+Dette kan skyldes at det ligger metadata i filen om at den har blitt lastet ned fra internett eller at den eies av en annen bruker enn den som kjører scriptet. For å bli kvitt meldingen, prøv å åpne "Properties" for fila (fra kontekstmenyen) og velg "Remove Properties and Personal Information" under "Details"-fanen.
